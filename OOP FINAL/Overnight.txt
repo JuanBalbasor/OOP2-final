@@ -1,0 +1,24 @@
+//Overnight.java//
+
+public class Overnight extends Package {
+
+    private float additionalFee;
+
+    public Overnight(Person sender, Person recipient, float weight, float costPerOunce, float additionalFee) {
+        super(sender, recipient, weight, costPerOunce);
+        this.additionalFee = additionalFee;
+    }
+
+    public float calculateCost() {
+        return (super.getCostPerOunce() + this.additionalFee) * super.getWeight();
+    }
+
+    public float getAdditionalFee() {
+        return this.additionalFee;
+    }
+
+    public void setAdditionalFee(float additionalFee) {
+        this.additionalFee = additionalFee;
+    }
+
+}

@@ -1,0 +1,226 @@
+//PackageUI.java//
+
+import javax.swing.*;
+import java.awt.event.*;
+
+class PackageUI extends JFrame implements ActionListener {
+    JComboBox<String> packageOptions;
+    JLabel sender, receiver, name, address, city, zipcode, r_name, r_address, r_city, r_zipcode,
+            weightLabel, costLabel, additionalFeeLabel, flatFeeLabel;
+    JTextField sender_name, sender_address, sender_city, sender_zipcode, receiver_name, receiver_address, receiver_city,
+            receiver_zipcode,
+            cost, weight, flatFee, additionalFee;
+    JButton submit;
+
+    public PackageUI() {
+        setTitle("Package Delivery Services");
+        setSize(600, 420);
+        setLayout(null);
+        setVisible(true);
+
+        // Adding spacing above the JComboBox panel
+        int spacingAboveCombo = 20; // dropdown spacing 
+        JPanel comboPanel = new JPanel();
+        comboPanel.setBounds(200, spacingAboveCombo, 200, 30);
+
+        String[] packageChoices = { "Standard Package", "Twoday Package", "Overnight Package" };
+        packageOptions = new JComboBox<>(packageChoices);
+        comboPanel.add(packageOptions);
+        packageOptions.addActionListener(this);
+
+        // Sender
+        sender = new JLabel("Sender Credentials:");
+        sender.setBounds(0, 100, 300, 20);
+        name = new JLabel("Name :");
+        name.setBounds(0, 130, 300, 20);
+        sender_name = new JTextField();
+        sender_name.setBounds(60, 130, 200, 20);
+
+        address = new JLabel("Address :");
+        address.setBounds(0, 155, 300, 20);
+        sender_address = new JTextField();
+        sender_address.setBounds(60, 155, 200, 20);
+
+        city = new JLabel("City :");
+        city.setBounds(0, 185, 300, 20);
+        sender_city = new JTextField();
+        sender_city.setBounds(60, 185, 200, 20);
+
+        zipcode = new JLabel("Zip_Code:");
+        zipcode.setBounds(0, 210, 300, 20);
+        sender_zipcode = new JTextField();
+        sender_zipcode.setBounds(60, 210, 200, 20);
+
+        // Receiver
+        receiver = new JLabel("Receiver Credentials:");
+        receiver.setBounds(300, 100, 300, 20);
+
+        r_name = new JLabel("Name :");
+        r_name.setBounds(300, 130, 300, 20);
+        receiver_name = new JTextField();
+        receiver_name.setBounds(360, 130, 200, 20);
+
+        r_address = new JLabel("Address :");
+        r_address.setBounds(300, 155, 300, 20);
+        receiver_address = new JTextField();
+        receiver_address.setBounds(360, 155, 200, 20);
+
+        r_city = new JLabel("City :");
+        r_city.setBounds(300, 185, 300, 20);
+        receiver_city = new JTextField();
+        receiver_city.setBounds(360, 185, 200, 20);
+
+        r_zipcode = new JLabel("Zip_code:");
+        r_zipcode.setBounds(300, 210, 300, 20);
+        receiver_zipcode = new JTextField();
+        receiver_zipcode.setBounds(360, 210, 200, 20);
+
+        weightLabel = new JLabel("Weight :");
+        weightLabel.setBounds(0, 250, 200, 20);
+        costLabel = new JLabel("Cost :");
+        costLabel.setBounds(300, 250, 200, 20);
+        flatFeeLabel = new JLabel("Flat fee");
+        flatFeeLabel.setBounds(10, 270, 200, 20);
+        additionalFeeLabel = new JLabel("Additional Fee:");
+        additionalFeeLabel.setBounds(300, 270, 200, 20);
+
+        weight = new JTextField("0");
+        weight.setBounds(60, 250, 200, 20);
+        cost = new JTextField("0");
+        cost.setBounds(360, 250, 200, 20);
+
+        flatFee = new JTextField("0");
+        flatFee.setBounds(60, 275, 200, 20);
+        additionalFee = new JTextField("0");
+        additionalFee.setBounds(360, 300, 200, 20);
+
+        flatFee.setVisible(false);
+        additionalFee.setVisible(false);
+        flatFeeLabel.setVisible(false);
+        additionalFeeLabel.setVisible(false);
+
+        submit = new JButton("Submit");
+        submit.setBounds(250, 320, 100, 30);
+        submit.addActionListener(this);
+
+        // Add the JComboBox to the frame
+        add(comboPanel);
+
+        // Add other components to the frame
+        add(sender);
+        add(receiver);
+        add(name);
+        add(address);
+        add(city);
+        add(zipcode);
+
+        add(r_name);
+        add(r_address);
+        add(r_city);
+        add(r_zipcode);
+
+        add(sender_name);
+        add(sender_address);
+        add(sender_city);
+        add(sender_zipcode);
+
+        add(receiver_name);
+        add(receiver_address);
+        add(receiver_city);
+        add(receiver_zipcode);
+
+        add(weightLabel);
+        add(weight);
+        add(costLabel);
+        add(cost);
+        add(flatFeeLabel);
+        add(flatFee);
+        add(additionalFeeLabel);
+        add(additionalFee);
+
+        add(submit);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        String selectedPackage = (String) packageOptions.getSelectedItem();
+
+        if ("Twoday Package".equals(selectedPackage)) {
+            flatFee.setVisible(true);
+            additionalFee.setVisible(false);
+            flatFeeLabel.setVisible(true);
+            additionalFeeLabel.setVisible(false);
+        } else if ("Overnight Package".equals(selectedPackage)) {
+            flatFee.setVisible(false);
+            additionalFee.setVisible(true);
+            flatFeeLabel.setVisible(false);
+            additionalFeeLabel.setVisible(true);
+        } else {
+            // For "Standard Package" or other cases
+            flatFee.setVisible(false);
+            additionalFee.setVisible(false);
+            flatFeeLabel.setVisible(false);
+            additionalFeeLabel.setVisible(false);
+        }
+
+        if ("Submit".equals(e.getActionCommand())) {
+            if (validateFields()) {
+                Person sender = new Person(sender_name.getText(), sender_address.getText(), sender_city.getText(),
+                        sender_zipcode.getText());
+                Person recipient = new Person(receiver_name.getText(), receiver_address.getText(),
+                        receiver_city.getText(), receiver_zipcode.getText());
+
+                if ("Standard Package".equals(selectedPackage)) {
+                    Package pkg = new Package(sender, recipient, Float.parseFloat(weight.getText()),
+                            Float.parseFloat(cost.getText()));
+                    JOptionPane.showMessageDialog(null, String.valueOf(pkg.calculateCost()) + " delivery cost");
+                } else if ("Overnight Package".equals(selectedPackage)) {
+                    Overnight pkg = new Overnight(sender, recipient, Float.parseFloat(weight.getText()),
+                            Float.parseFloat(cost.getText()), Float.parseFloat(additionalFee.getText()));
+                    JOptionPane.showMessageDialog(null, String.valueOf(pkg.calculateCost()) + " delivery cost");
+                } else if ("Twoday Package".equals(selectedPackage)) {
+                    TwoDay pkg = new TwoDay(sender, recipient, Float.parseFloat(weight.getText()),
+                            Float.parseFloat(cost.getText()), Float.parseFloat(flatFee.getText()));
+                    JOptionPane.showMessageDialog(null, String.valueOf(pkg.calculateCost()) + " delivery cost");
+                }
+            }
+        }
+    }
+
+    public boolean validateFields() {
+        if (sender_name.getText().isEmpty() ||
+                sender_address.getText().isEmpty() ||
+                sender_city.getText().isEmpty() ||
+                sender_zipcode.getText().isEmpty() ||
+                receiver_name.getText().isEmpty() ||
+                receiver_address.getText().isEmpty() ||
+                receiver_city.getText().isEmpty() ||
+                receiver_zipcode.getText().isEmpty() ||
+                cost.getText().isEmpty() ||
+                weight.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Fill up the blank fields.");
+            return false;
+        }
+
+        if (Float.parseFloat(cost.getText()) <= 0 || Float.parseFloat(weight.getText()) <= 0) {
+            JOptionPane.showMessageDialog(null,
+                    "Weight and cost per ounce must be positive numbers or greater than 0.");
+            return false;
+        }
+
+        if (("Overnight Package".equals((String) packageOptions.getSelectedItem()))
+                && (additionalFee.getText().isEmpty() || Float.parseFloat(additionalFee.getText()) <= 0)) {
+            JOptionPane.showMessageDialog(null, "Add Additional Fee");
+            return false;
+        } else if (("Twoday Package".equals((String) packageOptions.getSelectedItem()))
+                && (flatFee.getText().isEmpty() || Float.parseFloat(flatFee.getText()) <= 0)) {
+            JOptionPane.showMessageDialog(null, "Add flat fee");
+            return false;
+        }
+
+        return true;
+    }
+
+    public static void main(String[] args) {
+        new PackageUI();
+    }
+}
